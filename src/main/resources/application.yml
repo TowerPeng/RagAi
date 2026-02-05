@@ -1,0 +1,78 @@
+server:
+  port: 8989
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  profiles:
+    active: dev
+  ai:
+    websearch:
+      api-key:  ${websearch.api-key}
+      searxng:
+        url: "http://127.0.0.1:8080/search"
+        nums: 10
+        engines: "duckduckgo,google,bing,brave,mojeek,presearch,qwant,startpage,yahoo,arxiv,crossref,google_scholar,internetarchivescholar,semantic_scholar"
+    dashscope:
+      api-key: ${ALI_AI_KEY}
+
+    vectorstore:
+      milvus:
+        client:
+          host: "localhost" # default: localhost
+          port: 19530 # default: 19530
+          username: "" # default: root
+          password: "" # default: milvus
+        databaseName: "default"
+        collectionName: "vector_store" # default: vector_store
+        embeddingDimension: 1536 # default: 1536
+        indexType: IVF_FLAT # default: IVF_FLAT
+        metricType: COSINE # default: COSINE
+        initializeSchema: true # 自动创建集合
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/xushu_rag?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  data:
+    redis:
+      port: 6379              # Redis 服务器端口，默认为 6379
+#      password:               # Redis 密码，默认为空
+      timeout: 5000ms         # 连接超时时间
+      lettuce:
+        pool:
+          max-active: 8       # 最大连接数
+          max-idle: 4         # 最大空闲连接数
+          min-idle: 1         # 最小空闲连接数
+          max-wait: 2000ms
+aliyun:
+  alioss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+    access-key-id: ${alioss.access-key-id}
+    access-key-secret: ${alioss.access-key-secret}
+    bucket-name: xushu-rag
+
+xushu:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: xushu
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    user-secret-key: xushu
+    user-ttl: 7200000
+    user-token-name: authorization
+
+logging:
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              advisor: debug
