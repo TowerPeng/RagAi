@@ -52,6 +52,8 @@ public class AliOssFileServiceImpl extends ServiceImpl<AliOssFileMapper, AliOssF
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    //涉及错误的文件，需要删除一系列文件，如数据库记录，向量文件，阿里云文件
+    //如果涉及到更新，需要上传新的文件，告知LLM新旧模型
     public BaseResponse deleteFiles(List<Long> ids) {
         List<AliOssFile> aliOssFiles = aliOssFileMapper.selectByIds(ids);
         if (ids.isEmpty()) {
