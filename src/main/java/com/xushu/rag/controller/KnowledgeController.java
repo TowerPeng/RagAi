@@ -67,7 +67,41 @@ public class KnowledgeController {
     @Operation(summary = "upload", description = "上传附件接口")
     @PostMapping(value = "file/upload", headers = "content-type=multipart/form-data")
     public BaseResponse upload(@RequestParam("file") List<MultipartFile> files) {
-        // todo...
+        //上传文件
+        for (MultipartFile file : files) {
+            try {
+                String originalFilename = file.getOriginalFilename();
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String objectName = UUID.randomUUID().toString() + extension;
+                String url = aliOssUtil.upload(file.getBytes(), objectName);
+
+                //向量化
+                //1、读取文件 txt pdf docx doc
+                Resource resource = file.getResource();
+                TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
+                List<Document> documents = tikaDocumentReader.read();
+                //2、分词
+                List<Document> apply = tokenTextSplitter.apply(documents);
+                //3、向量化
+                //4、保存向量
+                vectorStore.add( apply);
+                long currentTimeMillis = System.currentTimeMillis();
+                //持久化到数据库
+                aliOssFileService.save(AliOssFile.builder()
+                        .fileName(originalFilename)
+                        .vectorId(JSON.toJSONString(documents.stream().map(Document::getId).collect(Collectors.toList())))
+                        .url(url)
+                        .createTime(new Date(currentTimeMillis))
+                        .updateTime(new Date(currentTimeMillis))
+                        .build());
+            } catch (IOException e) {
+                log.error("文件上传失败",e);
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"文件上传失败");
+            }catch (Exception e){
+                log.error("文件上传失败",e);
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"文件上传失败");
+            }
+        }
         return ResultUtils.success("文件上传成功");
     }
 

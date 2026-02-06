@@ -57,11 +57,52 @@ import java.util.List;
 @RestController
 @RequestMapping(ApplicationConstant.API_VERSION + "/ai")
 public class AiRagController {
+
+    @Autowired
+    private SensitiveWordService sensitiveWordService;
+
+    ChatClient chatClient;
+    VectorStore vectorStore;
+    public AiRagController(ChatModel chatModel,ChatMemory chatMemory, VectorStore vectorStore) {
+        this.chatClient = ChatClient
+                .builder(chatModel)
+                .defaultSystem("""
+                        你是 RAG 知识系统的对话助手，请以乐于助人的方式进行对话
+                        今天日期：{current_data}
+                        """)
+                .defaultAdvisors(PromptChatMemoryAdvisor.builder(chatMemory).build(),
+                        SimpleLoggerAdvisor.builder().build())
+                .build();
+        this.vectorStore = vectorStore;
+    }
+
     @Operation(summary = "rag", description = "Rag对话接口")
     @GetMapping(value = "/rag")
     @Loggable
     public Flux<String> generate(@RequestParam(value = "message", defaultValue = "你好") String message) throws IOException {
 
-        return  null;
+        List<SensitiveWord> list = sensitiveWordService.list();
+        for(SensitiveWord sensitiveWord:list){
+            if(message.contains(sensitiveWord.getWord())){
+                return Flux.just("请勿输入敏感词");
+            }
+        }
+
+        Flux<String> content = chatClient
+                .prompt()
+                .user(message)
+                .advisors(a->a.param("current_data",LocalDate.now().toString()))
+                //向量数据库
+                .advisors(QuestionAnswerAdvisor.builder(vectorStore)
+                        .searchRequest(SearchRequest
+                                .builder()
+                                .query(message)
+                                .similarityThreshold(0.1d)
+                                .topK(5)
+                                .build())
+                        .build())
+                .stream()
+                .content();
+        return content;
     }
 }

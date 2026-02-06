@@ -32,17 +32,18 @@ spring:
         metricType: COSINE # default: COSINE
         initializeSchema: true # 自动创建集合
   datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/xushu_rag?serverTimezone=UTC
+    url: jdbc:mysql://lts-dev-test.rwlb.rds.aliyuncs.com/vip-community-test?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=true
+    username: vip_community
+    password: v2$0C^WT-S1Z9uVWdy
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
   data:
     redis:
-      port: 6379              # Redis 服务器端口，默认为 6379
-#      password:               # Redis 密码，默认为空
-      timeout: 5000ms         # 连接超时时间
+      host: r-bp1me5k3vfzq8gwbd6pd.redis.rds.aliyuncs.com
+      port: 6379
+      password: WEchat2021
+      timeout:  5000
       lettuce:
         pool:
           max-active: 8       # 最大连接数
@@ -51,10 +52,10 @@ spring:
           max-wait: 2000ms
 aliyun:
   alioss:
-    endpoint: oss-cn-shenzhen.aliyuncs.com
-    access-key-id: ${alioss.access-key-id}
-    access-key-secret: ${alioss.access-key-secret}
-    bucket-name: xushu-rag
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    access-key-id: LTAI5tRYm5EUzh1s69k3PZFk
+    access-key-secret: vMLLxbuwNmT4MLMZgDTnLWthiaISFC
+    bucket-name: tower-peng
 
 xushu:
   jwt:

@@ -40,6 +40,12 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             //当前拦截到的不是动态方法，直接放行
             return true;
         }
+        String requestURI = request.getRequestURI();
+        if("/api/v1/knowledge/file/upload".equals(requestURI)
+                || "/api/v1/ai/rag".equals(requestURI)
+        ){
+            return true;
+        }
 
         //1、从请求头中获取令牌
         String token = request.getHeader(jwtProperties.getUserTokenName());
