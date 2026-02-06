@@ -53,8 +53,8 @@ spring:
 aliyun:
   alioss:
     endpoint: oss-cn-shanghai.aliyuncs.com
-    access-key-id: LTAI5tRYm5EUzh1s69k3PZFk
-    access-key-secret: vMLLxbuwNmT4MLMZgDTnLWthiaISFC
+    access-key-id: ${accessKeyId}
+    access-key-secret: ${accessKeySecret}
     bucket-name: tower-peng
 
 xushu:
