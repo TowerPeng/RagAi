@@ -32,17 +32,16 @@ spring:
         metricType: COSINE # default: COSINE
         initializeSchema: true # 自动创建集合
   datasource:
-    url: jdbc:mysql://lts-dev-test.rwlb.rds.aliyuncs.com/vip-community-test?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=true
-    username: vip_community
-    password: v2$0C^WT-S1Z9uVWdy
+    url: jdbc:mysql://localhost:3306/test_ai?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=true
+    username: root
+    password: 12345
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
   data:
     redis:
-      host: r-bp1me5k3vfzq8gwbd6pd.redis.rds.aliyuncs.com
+      host: localhost
       port: 6379
-      password: WEchat2021
       timeout:  5000
       lettuce:
         pool:
