@@ -1,0 +1,2 @@
+# 忽略整个 target 目录（包含其下所有 .class 文件及构建产物）
+target/
