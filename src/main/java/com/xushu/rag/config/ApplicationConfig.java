@@ -1,19 +1,14 @@
 package com.xushu.rag.config;
 
-import com.alibaba.cloud.ai.advisor.RetrievalRerankAdvisor;
 import com.xushu.rag.common.ApplicationConstant;
 import com.xushu.rag.common.JwtTokenUserInterceptor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 /**
  * @author xushu
